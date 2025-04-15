@@ -1,20 +1,63 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useWeather } from "@/context/WeatherContext";
 import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Settings, Sun, Moon, Search, MapPin } from "lucide-react";
+import { 
+  Settings, 
+  Sun, 
+  Moon, 
+  Search, 
+  MapPin,
+  MapPinOff,
+  LocateFixed
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface TopBarProps {
   onSettingsClick: () => void;
 }
 
 const TopBar: React.FC<TopBarProps> = ({ onSettingsClick }) => {
-  const { searchCity, getLocationWeather, isLoading, lastSearchedCity } = useWeather();
+  const { 
+    searchCity, 
+    getLocationWeather, 
+    isLoading, 
+    lastSearchedCity,
+    checkLocationPermission,
+    requestLocationPermission
+  } = useWeather();
   const { theme, toggleTheme } = useTheme();
   const [cityInput, setCityInput] = useState("");
+  const [locationPermissionState, setLocationPermissionState] = useState<"unknown" | "granted" | "denied" | "prompt">("unknown");
+
+  // Check location permission on component mount
+  useEffect(() => {
+    checkLocationStatus();
+  }, []);
+
+  const checkLocationStatus = async () => {
+    // For browsers that support Permissions API
+    if (navigator.permissions && navigator.permissions.query) {
+      try {
+        const permissionStatus = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
+        setLocationPermissionState(permissionStatus.state);
+        
+        // Add event listener to detect permission changes
+        permissionStatus.onchange = () => {
+          setLocationPermissionState(permissionStatus.state);
+        };
+      } catch (error) {
+        console.error("Error checking geolocation permission:", error);
+      }
+    } else {
+      // For browsers without Permissions API
+      const hasPermission = await checkLocationPermission();
+      setLocationPermissionState(hasPermission ? "granted" : "prompt");
+    }
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,8 +67,32 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsClick }) => {
     }
   };
 
-  const handleLocationClick = () => {
-    getLocationWeather();
+  const handleLocationClick = async () => {
+    if (locationPermissionState === "denied") {
+      toast.error(
+        "Location access is blocked. Please enable location services in your browser settings.",
+        {
+          duration: 5000,
+          action: {
+            label: "Learn How",
+            onClick: () => {
+              window.open("https://support.google.com/chrome/answer/142065", "_blank");
+            }
+          }
+        }
+      );
+      return;
+    }
+    
+    if (locationPermissionState === "prompt") {
+      const granted = await requestLocationPermission();
+      if (granted) {
+        setLocationPermissionState("granted");
+        getLocationWeather();
+      }
+    } else {
+      getLocationWeather();
+    }
   };
 
   return (
@@ -88,11 +155,31 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsClick }) => {
         <Button
           onClick={handleLocationClick}
           disabled={isLoading}
-          className="bg-sky-500 hover:bg-sky-600 rounded-full flex gap-2 items-center w-full sm:w-auto"
+          className={cn(
+            "rounded-full flex gap-2 items-center w-full sm:w-auto",
+            locationPermissionState === "denied" 
+              ? "bg-red-500 hover:bg-red-600" 
+              : "bg-sky-500 hover:bg-sky-600"
+          )}
         >
-          <MapPin className="h-4 w-4" />
-          <span className="hidden sm:inline">Your Weather</span>
-          <span className="sm:hidden">Your Location</span>
+          {locationPermissionState === "denied" ? (
+            <MapPinOff className="h-4 w-4" />
+          ) : locationPermissionState === "granted" ? (
+            <LocateFixed className="h-4 w-4" />
+          ) : (
+            <MapPin className="h-4 w-4" />
+          )}
+          
+          <span className="hidden sm:inline">
+            {locationPermissionState === "denied" 
+              ? "Location Blocked" 
+              : "Your Weather"}
+          </span>
+          <span className="sm:hidden">
+            {locationPermissionState === "denied" 
+              ? "Location Blocked" 
+              : "Your Location"}
+          </span>
         </Button>
       </div>
     </div>

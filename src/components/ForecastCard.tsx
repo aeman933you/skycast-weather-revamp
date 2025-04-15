@@ -59,8 +59,10 @@ const ForecastCard: React.FC<ForecastCardProps> = ({ data }) => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-0 lg:-left-12" />
-        <CarouselNext className="right-0 lg:-right-12" />
+        <div className="hidden md:block">
+          <CarouselPrevious className="left-0 lg:-left-12" />
+          <CarouselNext className="right-0 lg:-right-12" />
+        </div>
       </Carousel>
     </div>
   );
