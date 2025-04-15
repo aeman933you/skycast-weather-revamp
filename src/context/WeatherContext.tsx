@@ -11,9 +11,11 @@ interface WeatherContextProps {
   isLoading: boolean;
   temperatureUnit: TemperatureUnit;
   lastSearchedCity: string;
+  defaultLocation: string;
   searchCity: (city: string) => Promise<void>;
   getLocationWeather: () => Promise<void>;
   setTemperatureUnit: (unit: TemperatureUnit) => void;
+  setDefaultLocation: (location: string) => void;
 }
 
 const WeatherContext = createContext<WeatherContextProps | undefined>(undefined);
@@ -28,10 +30,13 @@ export const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [lastSearchedCity, setLastSearchedCity] = useState<string>(() => 
     getLocalStorage<string>("skycast-last-city", "London")
   );
+  const [defaultLocation, setDefaultLocation] = useState<string>(() => 
+    getLocalStorage<string>("skycast-default-location", "")
+  );
 
-  // Load last searched city on initial load
+  // Load default location on initial load
   useEffect(() => {
-    const initialCity = getLocalStorage<string>("skycast-last-city", "London");
+    const initialCity = defaultLocation || getLocalStorage<string>("skycast-last-city", "London");
     if (initialCity) {
       searchCity(initialCity);
     }
@@ -45,6 +50,12 @@ export const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ child
       searchCity(currentWeather.name);
     }
   }, [temperatureUnit]);
+
+  // Save default location to localStorage whenever it changes
+  const handleSetDefaultLocation = (location: string) => {
+    setDefaultLocation(location);
+    setLocalStorage("skycast-default-location", location);
+  };
 
   const searchCity = async (city: string) => {
     if (!city.trim()) {
@@ -131,9 +142,11 @@ export const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ child
         isLoading,
         temperatureUnit,
         lastSearchedCity,
+        defaultLocation,
         searchCity,
         getLocationWeather,
         setTemperatureUnit: handleSetTemperatureUnit,
+        setDefaultLocation: handleSetDefaultLocation,
       }}
     >
       {children}

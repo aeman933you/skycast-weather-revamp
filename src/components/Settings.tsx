@@ -1,11 +1,13 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
 import { useWeather } from "@/context/WeatherContext";
 import { TemperatureUnit } from "@/types/weather";
-import { X } from "lucide-react";
+import { X, Save } from "lucide-react";
+import { toast } from "sonner";
 
 interface SettingsProps {
   isOpen: boolean;
@@ -13,10 +15,16 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
-  const { temperatureUnit, setTemperatureUnit } = useWeather();
+  const { temperatureUnit, setTemperatureUnit, defaultLocation, setDefaultLocation } = useWeather();
+  const [locationInput, setLocationInput] = useState(defaultLocation || "");
 
   const handleUnitChange = (checked: boolean) => {
     setTemperatureUnit(checked ? "imperial" : "metric");
+  };
+
+  const handleSaveDefaultLocation = () => {
+    setDefaultLocation(locationInput);
+    toast.success(`Default location set to "${locationInput}"`);
   };
 
   if (!isOpen) return null;
@@ -49,6 +57,26 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
               checked={temperatureUnit === "imperial"}
               onCheckedChange={handleUnitChange}
             />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="default-location" className="text-base">Default Location</Label>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+              This location will be loaded when you open the app
+            </p>
+            <div className="flex gap-2">
+              <Input 
+                id="default-location"
+                value={locationInput}
+                onChange={(e) => setLocationInput(e.target.value)}
+                placeholder="Enter city name..."
+                className="flex-1"
+              />
+              <Button onClick={handleSaveDefaultLocation} size="sm">
+                <Save className="h-4 w-4 mr-1" />
+                Save
+              </Button>
+            </div>
           </div>
 
           <div className="pt-4 border-t dark:border-gray-700">
