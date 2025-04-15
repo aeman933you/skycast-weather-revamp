@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,26 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Weather theme colors
+				sky: {
+					DEFAULT: '#0EA5E9',
+					light: '#7DD3FC',
+					dark: '#0369A1'
+				},
+				cloud: {
+					DEFAULT: '#F1F5F9',
+					dark: '#94A3B8'
+				},
+				night: {
+					DEFAULT: '#1E293B',
+					light: '#334155'
 				}
+			},
+			backgroundImage: {
+				'gradient-sky': 'linear-gradient(to bottom right, #0EA5E9, #7DD3FC)',
+				'gradient-sunset': 'linear-gradient(to bottom right, #F97316, #FBBF24)',
+				'gradient-night': 'linear-gradient(to bottom, #1E293B, #0F172A)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +104,21 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					from: { opacity: '0' },
+					to: { opacity: '1' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out',
+				'float': 'float 3s ease-in-out infinite'
 			}
 		}
 	},
