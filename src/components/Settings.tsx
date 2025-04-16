@@ -6,8 +6,9 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { useWeather } from "@/context/WeatherContext";
 import { TemperatureUnit } from "@/types/weather";
-import { X, Save } from "lucide-react";
+import { X, Save, FileText, Shield } from "lucide-react";
 import { toast } from "sonner";
+import TermsAndPolicy from "./TermsAndPolicy";
 
 interface SettingsProps {
   isOpen: boolean;
@@ -17,6 +18,9 @@ interface SettingsProps {
 const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
   const { temperatureUnit, setTemperatureUnit, defaultLocation, setDefaultLocation } = useWeather();
   const [locationInput, setLocationInput] = useState(defaultLocation || "");
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [policyType, setPolicyType] = useState<"terms" | "privacy">("terms");
 
   const handleUnitChange = (checked: boolean) => {
     setTemperatureUnit(checked ? "imperial" : "metric");
@@ -25,6 +29,16 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
   const handleSaveDefaultLocation = () => {
     setDefaultLocation(locationInput);
     toast.success(`Default location set to "${locationInput}"`);
+  };
+  
+  const openTerms = () => {
+    setPolicyType("terms");
+    setTermsOpen(true);
+  };
+  
+  const openPrivacy = () => {
+    setPolicyType("privacy");
+    setPrivacyOpen(true);
   };
 
   if (!isOpen) return null;
@@ -78,6 +92,20 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
               </Button>
             </div>
           </div>
+          
+          <div className="space-y-3 pt-2">
+            <Label className="text-base">Legal Information</Label>
+            <div className="flex flex-col gap-2">
+              <Button variant="outline" className="justify-start" onClick={openTerms}>
+                <FileText className="h-4 w-4 mr-2" />
+                Terms of Service
+              </Button>
+              <Button variant="outline" className="justify-start" onClick={openPrivacy}>
+                <Shield className="h-4 w-4 mr-2" />
+                Privacy Policy
+              </Button>
+            </div>
+          </div>
 
           <div className="pt-4 border-t dark:border-gray-700">
             <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -87,6 +115,15 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
       </div>
+      
+      <TermsAndPolicy 
+        isOpen={termsOpen || privacyOpen}
+        onClose={() => {
+          setTermsOpen(false);
+          setPrivacyOpen(false);
+        }}
+        type={policyType}
+      />
     </div>
   );
 };

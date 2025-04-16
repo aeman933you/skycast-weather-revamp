@@ -15,6 +15,7 @@ import {
   CarouselNext,
   CarouselPrevious
 } from "@/components/ui/carousel";
+import { Card } from "@/components/ui/card";
 
 interface ForecastCardProps {
   data: ForecastData;
@@ -35,27 +36,29 @@ const ForecastCard: React.FC<ForecastCardProps> = ({ data }) => {
         <CarouselContent className="-ml-1 md:-ml-2">
           {dailyForecast.slice(0, 5).map((item) => (
             <CarouselItem key={item.dt} className="pl-1 md:pl-2 sm:basis-1/2 md:basis-1/3 lg:basis-1/5">
-              <div 
-                className="flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700 h-full"
-              >
-                <p className="font-medium mb-2">
-                  {formatDate(item.dt).split(", ")[0]}
-                </p>
-                <img 
-                  src={getWeatherIcon(item.weather[0].icon)} 
-                  alt={item.weather[0].description}
-                  className="w-12 h-12 my-1" 
-                />
-                <p className="capitalize text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  {item.weather[0].description}
-                </p>
-                <div className="flex justify-between w-full">
-                  <span className="font-semibold">{Math.round(item.main.temp_max)}{unitSymbol}</span>
-                  <span className="text-gray-500 dark:text-gray-400">
-                    {Math.round(item.main.temp_min)}{unitSymbol}
-                  </span>
+              <Card className="overflow-hidden">
+                <div 
+                  className="flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700 h-full"
+                >
+                  <p className="font-medium mb-2">
+                    {formatDate(item.dt).split(", ")[0]}
+                  </p>
+                  <img 
+                    src={getWeatherIcon(item.weather[0].icon)} 
+                    alt={item.weather[0].description}
+                    className="w-12 h-12 my-1" 
+                  />
+                  <p className="capitalize text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    {item.weather[0].description}
+                  </p>
+                  <div className="flex justify-between w-full">
+                    <span className="font-semibold">{Math.round(item.main.temp_max)}{unitSymbol}</span>
+                    <span className="text-gray-500 dark:text-gray-400">
+                      {Math.round(item.main.temp_min)}{unitSymbol}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </Card>
             </CarouselItem>
           ))}
         </CarouselContent>
