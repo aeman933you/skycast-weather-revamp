@@ -20,9 +20,10 @@ import DateToggle from "./DateToggle";
 
 interface TopBarProps {
   onSettingsClick: () => void;
+  onTitleClick?: () => void;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ onSettingsClick }) => {
+const TopBar: React.FC<TopBarProps> = ({ onSettingsClick, onTitleClick }) => {
   const { 
     searchCity, 
     getLocationWeather, 
@@ -106,7 +107,10 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsClick }) => {
     <div className="w-full mb-6">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
         <div className="flex items-center mb-4 sm:mb-0">
-          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-500 bg-clip-text text-transparent">
+          <h1 
+            className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-500 bg-clip-text text-transparent cursor-pointer"
+            onClick={onTitleClick}
+          >
             SkyCast Weather
           </h1>
         </div>
