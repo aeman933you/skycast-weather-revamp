@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useWeather } from "@/context/WeatherContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -11,10 +10,12 @@ import {
   Search, 
   MapPin,
   MapPinOff,
-  LocateFixed
+  LocateFixed,
+  Clock
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { format } from "date-fns";
 
 interface TopBarProps {
   onSettingsClick: () => void;
@@ -32,20 +33,26 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsClick }) => {
   const { theme, toggleTheme } = useTheme();
   const [cityInput, setCityInput] = useState("");
   const [locationPermissionState, setLocationPermissionState] = useState<"unknown" | "granted" | "denied" | "prompt">("unknown");
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Check location permission on component mount
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   useEffect(() => {
     checkLocationStatus();
   }, []);
 
   const checkLocationStatus = async () => {
-    // For browsers that support Permissions API
     if (navigator.permissions && navigator.permissions.query) {
       try {
         const permissionStatus = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
         setLocationPermissionState(permissionStatus.state);
         
-        // Add event listener to detect permission changes
         permissionStatus.onchange = () => {
           setLocationPermissionState(permissionStatus.state);
         };
@@ -53,7 +60,6 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsClick }) => {
         console.error("Error checking geolocation permission:", error);
       }
     } else {
-      // For browsers without Permissions API
       const hasPermission = await checkLocationPermission();
       setLocationPermissionState(hasPermission ? "granted" : "prompt");
     }
@@ -104,6 +110,10 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsClick }) => {
           </h1>
         </div>
         <div className="flex items-center space-x-2">
+          <div className="flex items-center mr-2 text-sm text-gray-600 dark:text-gray-300">
+            <Clock className="h-4 w-4 mr-1" />
+            {format(currentTime, 'hh:mm:ss a')}
+          </div>
           <Button
             variant="outline"
             size="icon"
