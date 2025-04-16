@@ -1,15 +1,9 @@
-
 import React, { useState } from "react";
 import { WeatherProvider } from "@/context/WeatherContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import TopBar from "@/components/TopBar";
 import Settings from "@/components/Settings";
-import WeatherCard from "@/components/WeatherCard";
-import ForecastCard from "@/components/ForecastCard";
-import HourlyForecast from "@/components/HourlyForecast";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import EmptyState from "@/components/EmptyState";
-import { useWeather } from "@/context/WeatherContext";
+import WeatherDashboard from "@/components/WeatherDashboard";
 import TermsAndPolicy from "@/components/TermsAndPolicy";
 import { FileText, Shield, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -118,6 +112,9 @@ const Index: React.FC = () => {
                   Privacy Policy
                 </button>
                 <span>© 2025 SkyCast Weather App</span>
+                <span className="text-xs text-gray-400 dark:text-gray-500">
+                  Created by Aeman Taslim
+                </span>
               </div>
             </footer>
             <Settings isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
