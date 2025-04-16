@@ -16,6 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import DateToggle from "./DateToggle";
 
 interface TopBarProps {
   onSettingsClick: () => void;
@@ -110,6 +111,7 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsClick }) => {
           </h1>
         </div>
         <div className="flex items-center space-x-2">
+          <DateToggle />
           <div className="flex items-center mr-2 text-sm text-gray-600 dark:text-gray-300">
             <Clock className="h-4 w-4 mr-1" />
             {format(currentTime, 'hh:mm:ss a')}
