@@ -1,15 +1,21 @@
+
 import React, { useState } from "react";
 import { WeatherProvider } from "@/context/WeatherContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import TopBar from "@/components/TopBar";
 import Settings from "@/components/Settings";
-import WeatherDashboard from "@/components/WeatherDashboard";
+import WeatherCard from "@/components/WeatherCard";
+import ForecastCard from "@/components/ForecastCard";
+import HourlyForecast from "@/components/HourlyForecast";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import EmptyState from "@/components/EmptyState";
+import { useWeather } from "@/context/WeatherContext";
 import TermsAndPolicy from "@/components/TermsAndPolicy";
 import { FileText, Shield, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CalculatorApp from "@/components/Calculator";
 
-const WeatherDashboard: React.FC = () => {
+const WeatherDashboardContent: React.FC = () => {
   const { currentWeather, forecastData, isLoading } = useWeather();
 
   return (
@@ -93,7 +99,7 @@ const Index: React.FC = () => {
               onTitleClick={handleTitleClick}
             />
             <div className="flex-grow">
-              <WeatherDashboard />
+              <WeatherDashboardContent />
             </div>
             <footer className="mt-12 pt-4 border-t border-gray-200 dark:border-gray-700">
               <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-500 dark:text-gray-400">
