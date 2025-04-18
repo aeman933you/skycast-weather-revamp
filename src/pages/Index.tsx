@@ -19,7 +19,7 @@ const WeatherDashboardContent: React.FC = () => {
   const { currentWeather, forecastData, isLoading } = useWeather();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="space-y-6">
       {isLoading ? (
         <LoadingSpinner />
       ) : (
