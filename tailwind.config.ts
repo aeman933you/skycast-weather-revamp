@@ -66,7 +66,11 @@ export default {
         sky: {
           DEFAULT: '#0EA5E9',
           light: '#7DD3FC',
-          dark: '#0369A1'
+          dark: '#0369A1',
+          dawn: "#FEF3C7",     // Dawn sky
+          day: "#7DD3FC",      // Day sky
+          dusk: "#818CF8",     // Dusk sky
+          night: "#1E293B",    // Night sky
         },
         cloud: {
           light: "#F1F5F9",    // Light cloud color
@@ -75,12 +79,6 @@ export default {
           storm: "#334155",    // Storm cloud color
           rain: "#0EA5E9",     // Rain color
           mist: "#E2E8F0",     // Misty cloud color
-        },
-        sky: {
-          dawn: "#FEF3C7",     // Dawn sky
-          day: "#7DD3FC",      // Day sky
-          dusk: "#818CF8",     // Dusk sky
-          night: "#1E293B",    // Night sky
         }
       },
       backgroundImage: {
