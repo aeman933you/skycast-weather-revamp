@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useWeather } from "@/context/WeatherContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -7,14 +8,10 @@ import {
   Settings, 
   Sun, 
   Moon, 
-  Search, 
-  MapPin,
-  MapPinOff,
-  LocateFixed,
+  Search,
   Clock
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 import { format } from "date-fns";
 import DateToggle from "./DateToggle";
 
@@ -24,17 +21,9 @@ interface TopBarProps {
 }
 
 const TopBar: React.FC<TopBarProps> = ({ onSettingsClick, onTitleClick }) => {
-  const { 
-    searchCity, 
-    getLocationWeather, 
-    isLoading, 
-    lastSearchedCity,
-    checkLocationPermission,
-    requestLocationPermission
-  } = useWeather();
+  const { searchCity, isLoading } = useWeather();
   const { theme, toggleTheme } = useTheme();
   const [cityInput, setCityInput] = useState("");
-  const [locationPermissionState, setLocationPermissionState] = useState<"unknown" | "granted" | "denied" | "prompt">("unknown");
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -45,61 +34,11 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsClick, onTitleClick }) => {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    checkLocationStatus();
-  }, []);
-
-  const checkLocationStatus = async () => {
-    if (navigator.permissions && navigator.permissions.query) {
-      try {
-        const permissionStatus = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
-        setLocationPermissionState(permissionStatus.state);
-        
-        permissionStatus.onchange = () => {
-          setLocationPermissionState(permissionStatus.state);
-        };
-      } catch (error) {
-        console.error("Error checking geolocation permission:", error);
-      }
-    } else {
-      const hasPermission = await checkLocationPermission();
-      setLocationPermissionState(hasPermission ? "granted" : "prompt");
-    }
-  };
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (cityInput.trim()) {
       searchCity(cityInput);
       setCityInput("");
-    }
-  };
-
-  const handleLocationClick = async () => {
-    if (locationPermissionState === "denied") {
-      toast.error(
-        "Location access is blocked. Please enable location services in your browser settings.",
-        {
-          duration: 5000,
-          action: {
-            label: "Learn How",
-            onClick: () => {
-              window.open("https://support.google.com/chrome/answer/142065", "_blank");
-            }
-          }
-        }
-      );
-      return;
-    }
-    
-    if (locationPermissionState === "prompt") {
-      const granted = await requestLocationPermission();
-      if (granted) {
-        setLocationPermissionState("granted");
-        getLocationWeather();
-      }
-    } else {
-      getLocationWeather();
     }
   };
 
@@ -168,35 +107,6 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsClick, onTitleClick }) => {
             </Button>
           </div>
         </form>
-        <Button
-          onClick={handleLocationClick}
-          disabled={isLoading}
-          className={cn(
-            "rounded-full flex gap-2 items-center w-full sm:w-auto",
-            locationPermissionState === "denied" 
-              ? "bg-red-500 hover:bg-red-600" 
-              : "bg-sky-500 hover:bg-sky-600"
-          )}
-        >
-          {locationPermissionState === "denied" ? (
-            <MapPinOff className="h-4 w-4" />
-          ) : locationPermissionState === "granted" ? (
-            <LocateFixed className="h-4 w-4" />
-          ) : (
-            <MapPin className="h-4 w-4" />
-          )}
-          
-          <span className="hidden sm:inline">
-            {locationPermissionState === "denied" 
-              ? "Location Blocked" 
-              : "Your Weather"}
-          </span>
-          <span className="sm:hidden">
-            {locationPermissionState === "denied" 
-              ? "Location Blocked" 
-              : "Your Location"}
-          </span>
-        </Button>
       </div>
     </div>
   );
