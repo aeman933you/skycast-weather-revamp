@@ -60,7 +60,7 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsClick, onTitleClick }) => {
             {format(currentTime, 'hh:mm:ss a')}
           </div>
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             onClick={toggleTheme}
             className="rounded-full"
@@ -73,7 +73,7 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsClick, onTitleClick }) => {
             )}
           </Button>
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             onClick={onSettingsClick}
             className="rounded-full"
