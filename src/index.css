@@ -70,7 +70,9 @@
   }
 
   body {
-    @apply bg-gradient-to-br from-cloud-light via-sky-dawn to-cloud-base dark:from-sky-night dark:via-cloud-storm dark:to-sky-night transition-colors duration-300 min-h-screen relative overflow-hidden;
+    @apply bg-gradient-to-b from-sky-300 via-sky-200 to-sky-100 
+           dark:from-sky-900 dark:via-sky-800 dark:to-sky-900 
+           transition-colors duration-300 min-h-screen relative overflow-hidden;
   }
 
   body::before {
@@ -78,30 +80,29 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 200%;
-    height: 200%;
+    width: 300%;
+    height: 300%;
     background-image: 
-      radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 70%),
-      radial-gradient(ellipse at bottom right, rgba(200,200,200,0.2) 0%, transparent 60%);
-    background-size: 50% 50%;
-    background-position: 
-      0% 0%, 
-      100% 100%;
-    opacity: 0.5;
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.8) 0%, transparent 40%),
+      radial-gradient(circle at 30% 40%, rgba(255,255,255,0.6) 0%, transparent 30%),
+      radial-gradient(circle at 70% 60%, rgba(255,255,255,0.7) 0%, transparent 35%);
+    background-size: 100% 100%;
+    background-position: 0 0;
+    opacity: 0.6;
     z-index: -1;
-    animation: cloudMovement 30s infinite linear;
+    animation: cloudFloat 60s infinite linear;
     pointer-events: none;
   }
 
-  @keyframes cloudMovement {
+  @keyframes cloudFloat {
     0% {
-      transform: translate(0, 0) rotate(0deg);
+      transform: translate(0, 0) scale(1);
     }
     50% {
-      transform: translate(-10%, 5%) rotate(180deg);
+      transform: translate(-20%, -10%) scale(1.1);
     }
     100% {
-      transform: translate(0, 0) rotate(360deg);
+      transform: translate(0, 0) scale(1);
     }
   }
   
@@ -136,6 +137,31 @@
     @apply bg-gradient-to-r from-sky-600 to-blue-500 
            dark:from-sky-400 dark:to-blue-400 
            bg-clip-text text-transparent;
+  }
+
+  .floating-cloud {
+    @apply absolute pointer-events-none opacity-70;
+    filter: blur(4px);
+  }
+
+  .cloud-1 {
+    @apply top-[10%] left-[10%] w-32 h-16;
+    animation: floatCloud1 20s infinite ease-in-out;
+  }
+
+  .cloud-2 {
+    @apply top-[25%] right-[15%] w-40 h-20;
+    animation: floatCloud2 25s infinite ease-in-out;
+  }
+
+  @keyframes floatCloud1 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, -15px); }
+  }
+
+  @keyframes floatCloud2 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-20px, 20px); }
   }
 }
 
