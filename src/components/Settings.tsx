@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -22,7 +21,6 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 bg-background z-50">
       <ScrollArea className="h-full">
         <div className="container max-w-lg mx-auto px-4 py-6">
-          {/* Header */}
           <div className="flex items-center mb-8">
             <Button variant="ghost" size="icon" onClick={onClose} className="mr-4">
               <ChevronLeft className="h-6 w-6" />
@@ -30,14 +28,11 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
             <h1 className="text-2xl font-semibold">Settings</h1>
           </div>
 
-          {/* Content */}
           <div className="space-y-8">
-            {/* Home Screen Weather Section */}
             <section>
               <h2 className="text-xl mb-6">Home Screen Weather</h2>
               
               <div className="space-y-6">
-                {/* Temperature Unit */}
                 <div>
                   <Label className="text-base mb-2 block">Temperature unit</Label>
                   <RadioGroup 
@@ -60,7 +55,6 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
                   </RadioGroup>
                 </div>
 
-                {/* Hourly Forecast Interval */}
                 <div>
                   <Label className="text-base mb-2 block">Hourly forecast interval</Label>
                   <Select defaultValue="1">
@@ -75,7 +69,6 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
                   </Select>
                 </div>
 
-                {/* Multi-day Forecast Format */}
                 <div>
                   <Label className="text-base mb-2 block">Multi-day forecast format</Label>
                   <Select defaultValue="list">
@@ -91,11 +84,10 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
               </div>
             </section>
 
-            {/* About Section */}
             <section className="space-y-6">
               <div className="py-2">
                 <Label className="text-base">Version</Label>
-                <p className="text-sm text-muted-foreground">V6.4.0.7</p>
+                <p className="text-sm text-muted-foreground">V1.0.0</p>
               </div>
               
               <Button 
