@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -72,7 +73,7 @@
   body {
     @apply bg-gradient-to-b from-sky-300 via-sky-200 to-sky-100 
            dark:from-sky-900 dark:via-sky-800 dark:to-sky-900 
-           transition-colors duration-300 min-h-screen relative overflow-hidden;
+           transition-colors duration-300 min-h-screen relative;
   }
 
   body::before {
@@ -197,5 +198,25 @@
 
   .cloud-overlay {
     @apply absolute inset-0 bg-white/10 dark:bg-gray-900/20 backdrop-blur-sm pointer-events-none;
+  }
+  
+  .scrollable {
+    @apply overflow-y-auto overflow-x-hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+  }
+  
+  .scrollable::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollable::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollable::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5);
+    border-radius: 20px;
+    border: transparent;
   }
 }

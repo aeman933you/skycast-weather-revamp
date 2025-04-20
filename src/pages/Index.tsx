@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { WeatherProvider } from "@/context/WeatherContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -71,7 +72,7 @@ const Index: React.FC = () => {
   return (
     <ThemeProvider>
       {showCalculator ? (
-        <div className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col">
+        <div className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col scrollable">
           <div className="flex justify-between items-center mb-6">
             <h1 
               onClick={handleTitleClick}
@@ -94,7 +95,7 @@ const Index: React.FC = () => {
       ) : (
         <WeatherProvider>
           <TooltipProvider>
-            <div className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col">
+            <div className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col scrollable">
               <TopBar 
                 onSettingsClick={() => setSettingsOpen(true)} 
                 onTitleClick={handleTitleClick}
