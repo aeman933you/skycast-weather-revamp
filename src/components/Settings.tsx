@@ -1,7 +1,8 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Languages } from "lucide-react";
 import { useWeather } from "@/context/WeatherContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,9 +11,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 interface SettingsProps {
   isOpen: boolean;
   onClose: () => void;
+  language: string;
+  onLanguageChange: (language: string) => void;
 }
 
-const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
+const Settings: React.FC<SettingsProps> = ({ isOpen, onClose, language, onLanguageChange }) => {
   const { temperatureUnit, setTemperatureUnit } = useWeather();
 
   if (!isOpen) return null;
@@ -33,6 +36,24 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
               <h2 className="text-xl mb-6">Home Screen Weather</h2>
               
               <div className="space-y-6">
+                <div>
+                  <Label className="text-base mb-4 flex items-center gap-2">
+                    <Languages className="h-4 w-4" />
+                    Language
+                  </Label>
+                  <Select value={language} onValueChange={onLanguageChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="english">English</SelectItem>
+                      <SelectItem value="urdu">اردو</SelectItem>
+                      <SelectItem value="bangla">বাংলা</SelectItem>
+                      <SelectItem value="hindi">हिंदी</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <div>
                   <Label className="text-base mb-2 block">Temperature unit</Label>
                   <RadioGroup 

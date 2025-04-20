@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { WeatherProvider } from "@/context/WeatherContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -50,6 +49,7 @@ const Index: React.FC = () => {
   const [policyType, setPolicyType] = useState<"terms" | "privacy">("terms");
   const [showCalculator, setShowCalculator] = useState(false);
   const [secretClickCount, setSecretClickCount] = useState(0);
+  const [language, setLanguage] = useState<string>("english");
 
   const openTerms = () => {
     setPolicyType("terms");
@@ -125,7 +125,12 @@ const Index: React.FC = () => {
                   </span>
                 </div>
               </footer>
-              <Settings isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
+              <Settings 
+                isOpen={settingsOpen} 
+                onClose={() => setSettingsOpen(false)}
+                language={language}
+                onLanguageChange={setLanguage}
+              />
               <TermsAndPolicy 
                 isOpen={termsOpen || privacyOpen}
                 onClose={() => {
