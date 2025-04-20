@@ -1,26 +1,19 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { WeatherProvider } from "@/context/WeatherContext";
 import { ThemeProvider } from "@/context/ThemeContext";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import TopBar from "@/components/TopBar";
 import Settings from "@/components/Settings";
-import WeatherCard from "@/components/WeatherCard";
-import ForecastCard from "@/components/ForecastCard";
-import HourlyForecast from "@/components/HourlyForecast";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import EmptyState from "@/components/EmptyState";
-import { useWeather } from "@/context/WeatherContext";
+import WeatherDashboard from "@/components/WeatherDashboard";
 import TermsAndPolicy from "@/components/TermsAndPolicy";
 import { FileText, Shield, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CalculatorApp from "@/components/Calculator";
 
-const WeatherDashboardContent: React.FC = () => {
+const WeatherDashboard: React.FC = () => {
   const { currentWeather, forecastData, isLoading } = useWeather();
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-4">
       {isLoading ? (
         <LoadingSpinner />
       ) : (
@@ -50,17 +43,6 @@ const Index: React.FC = () => {
   const [policyType, setPolicyType] = useState<"terms" | "privacy">("terms");
   const [showCalculator, setShowCalculator] = useState(false);
   const [secretClickCount, setSecretClickCount] = useState(0);
-  
-  // Get the stored language from localStorage or default to "english"
-  const [language, setLanguage] = useState<string>(() => {
-    const savedLanguage = localStorage.getItem("app-language");
-    return savedLanguage || "english";
-  });
-
-  // Update localStorage when language changes
-  useEffect(() => {
-    localStorage.setItem("app-language", language);
-  }, [language]);
 
   const openTerms = () => {
     setPolicyType("terms");
@@ -83,7 +65,7 @@ const Index: React.FC = () => {
   return (
     <ThemeProvider>
       {showCalculator ? (
-        <div className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col scrollable">
+        <div className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col">
           <div className="flex justify-between items-center mb-6">
             <h1 
               onClick={handleTitleClick}
@@ -105,53 +87,46 @@ const Index: React.FC = () => {
         </div>
       ) : (
         <WeatherProvider>
-          <TooltipProvider>
-            <div className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col scrollable">
-              <TopBar 
-                onSettingsClick={() => setSettingsOpen(true)} 
-                onTitleClick={handleTitleClick}
-              />
-              <div className="flex-grow">
-                <WeatherDashboardContent />
-              </div>
-              <footer className="mt-12 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-                  <button 
-                    onClick={openTerms}
-                    className="flex items-center hover:text-primary transition-colors"
-                  >
-                    <FileText className="h-3 w-3 mr-1" />
-                    Terms of Service
-                  </button>
-                  <button 
-                    onClick={openPrivacy}
-                    className="flex items-center hover:text-primary transition-colors"
-                  >
-                    <Shield className="h-3 w-3 mr-1" />
-                    Privacy Policy
-                  </button>
-                  <span>© 2025 SkyCast Weather App</span>
-                  <span className="text-xs text-gray-400 dark:text-gray-500">
-                    Created by Aeman Taslim
-                  </span>
-                </div>
-              </footer>
-              <Settings 
-                isOpen={settingsOpen} 
-                onClose={() => setSettingsOpen(false)}
-                language={language}
-                onLanguageChange={setLanguage}
-              />
-              <TermsAndPolicy 
-                isOpen={termsOpen || privacyOpen}
-                onClose={() => {
-                  setTermsOpen(false);
-                  setPrivacyOpen(false);
-                }}
-                type={policyType}
-              />
+          <div className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col">
+            <TopBar 
+              onSettingsClick={() => setSettingsOpen(true)} 
+              onTitleClick={handleTitleClick}
+            />
+            <div className="flex-grow">
+              <WeatherDashboard />
             </div>
-          </TooltipProvider>
+            <footer className="mt-12 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+                <button 
+                  onClick={openTerms}
+                  className="flex items-center hover:text-primary transition-colors"
+                >
+                  <FileText className="h-3 w-3 mr-1" />
+                  Terms of Service
+                </button>
+                <button 
+                  onClick={openPrivacy}
+                  className="flex items-center hover:text-primary transition-colors"
+                >
+                  <Shield className="h-3 w-3 mr-1" />
+                  Privacy Policy
+                </button>
+                <span>© 2025 SkyCast Weather App</span>
+                <span className="text-xs text-gray-400 dark:text-gray-500">
+                  Created by Aeman Taslim
+                </span>
+              </div>
+            </footer>
+            <Settings isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
+            <TermsAndPolicy 
+              isOpen={termsOpen || privacyOpen}
+              onClose={() => {
+                setTermsOpen(false);
+                setPrivacyOpen(false);
+              }}
+              type={policyType}
+            />
+          </div>
         </WeatherProvider>
       )}
     </ThemeProvider>
