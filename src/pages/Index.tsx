@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { WeatherProvider } from "@/context/WeatherContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -49,7 +50,17 @@ const Index: React.FC = () => {
   const [policyType, setPolicyType] = useState<"terms" | "privacy">("terms");
   const [showCalculator, setShowCalculator] = useState(false);
   const [secretClickCount, setSecretClickCount] = useState(0);
-  const [language, setLanguage] = useState<string>("english");
+  
+  // Get the stored language from localStorage or default to "english"
+  const [language, setLanguage] = useState<string>(() => {
+    const savedLanguage = localStorage.getItem("app-language");
+    return savedLanguage || "english";
+  });
+
+  // Update localStorage when language changes
+  useEffect(() => {
+    localStorage.setItem("app-language", language);
+  }, [language]);
 
   const openTerms = () => {
     setPolicyType("terms");
