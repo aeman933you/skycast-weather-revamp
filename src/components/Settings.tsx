@@ -1,12 +1,13 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { ChevronLeft, Languages } from "lucide-react";
+import { ChevronLeft, Languages, Save } from "lucide-react";
 import { useWeather } from "@/context/WeatherContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useToast } from "@/hooks/use-toast";
 
 interface SettingsProps {
   isOpen: boolean;
@@ -17,18 +18,37 @@ interface SettingsProps {
 
 const Settings: React.FC<SettingsProps> = ({ isOpen, onClose, language, onLanguageChange }) => {
   const { temperatureUnit, setTemperatureUnit } = useWeather();
+  const [localLanguage, setLocalLanguage] = useState(language);
+  const [localTempUnit, setLocalTempUnit] = useState(temperatureUnit);
+  const { toast } = useToast();
 
   if (!isOpen) return null;
+
+  const handleSave = () => {
+    onLanguageChange(localLanguage);
+    setTemperatureUnit(localTempUnit);
+    toast({
+      title: "Settings saved",
+      description: "Your preferences have been updated successfully.",
+    });
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 bg-background z-50">
       <ScrollArea className="h-full">
         <div className="container max-w-lg mx-auto px-4 py-6">
-          <div className="flex items-center mb-8">
-            <Button variant="ghost" size="icon" onClick={onClose} className="mr-4">
-              <ChevronLeft className="h-6 w-6" />
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center">
+              <Button variant="ghost" size="icon" onClick={onClose} className="mr-4">
+                <ChevronLeft className="h-6 w-6" />
+              </Button>
+              <h1 className="text-2xl font-semibold">Settings</h1>
+            </div>
+            <Button onClick={handleSave} className="flex items-center gap-2">
+              <Save className="h-4 w-4" />
+              Save Changes
             </Button>
-            <h1 className="text-2xl font-semibold">Settings</h1>
           </div>
 
           <div className="space-y-8">
@@ -41,7 +61,7 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose, language, onLangua
                     <Languages className="h-4 w-4" />
                     Language
                   </Label>
-                  <Select value={language} onValueChange={onLanguageChange}>
+                  <Select value={localLanguage} onValueChange={setLocalLanguage}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select language" />
                     </SelectTrigger>
@@ -57,8 +77,8 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose, language, onLangua
                 <div>
                   <Label className="text-base mb-2 block">Temperature unit</Label>
                   <RadioGroup 
-                    defaultValue={temperatureUnit}
-                    onValueChange={(value) => setTemperatureUnit(value as "metric" | "imperial")}
+                    value={localTempUnit}
+                    onValueChange={(value) => setLocalTempUnit(value as "metric" | "imperial")}
                     className="space-y-3"
                   >
                     <div className="flex items-center space-x-2">
