@@ -29,15 +29,12 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ data }) => {
     <div
       className="
         flex flex-col items-center justify-center rounded-2xl
-        p-0 overflow-hidden relative w-full bg-gradient-to-b from-sky-200/80 via-sky-100 to-white dark:from-gray-700 dark:to-gray-900
+        p-0 overflow-hidden relative w-full
+        bg-gradient-to-b from-[#d3e4fd]/90 via-[#e8f0fc]/90 to-white/95
+        dark:from-gray-700 dark:to-gray-900
         shadow-xl animate-fade-in h-[360px] sm:h-[420px] mb-6
       "
-      style={{
-        backgroundImage: 'url("/lovable-uploads/20777213-84a2-4c60-8405-15898475c479.png")',
-        backgroundSize: "cover",
-        backgroundPosition: "top center",
-        backgroundRepeat: "no-repeat"
-      }}
+      // REMOVE backgroundImage style entirely to make the image disappear!
     >
       <div className="relative w-full h-full flex flex-col justify-start items-center pt-10 pb-6 backdrop-blur-[2px] bg-white/40 dark:bg-black/30">
         {/* City, date, and weather icon */}
