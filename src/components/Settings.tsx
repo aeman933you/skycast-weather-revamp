@@ -1,14 +1,12 @@
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
 import { useWeather } from "@/context/WeatherContext";
-import { TemperatureUnit } from "@/types/weather";
-import { X, Save, FileText, Shield } from "lucide-react";
-import { toast } from "sonner";
 import TermsAndPolicy from "./TermsAndPolicy";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+// Version can be hardcoded or imported from package.json if needed
+const APP_VERSION = "V6.4.0.7";
 
 interface SettingsProps {
   isOpen: boolean;
@@ -16,107 +14,86 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
-  const { temperatureUnit, setTemperatureUnit, defaultLocation, setDefaultLocation } = useWeather();
-  const [locationInput, setLocationInput] = useState(defaultLocation || "");
+  const { temperatureUnit } = useWeather();
   const [termsOpen, setTermsOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [policyType, setPolicyType] = useState<"terms" | "privacy">("terms");
 
-  const handleUnitChange = (checked: boolean) => {
-    setTemperatureUnit(checked ? "imperial" : "metric");
-  };
-
-  const handleSaveDefaultLocation = () => {
-    setDefaultLocation(locationInput);
-    toast.success(`Default location set to "${locationInput}"`);
-  };
-  
-  const openTerms = () => {
-    setPolicyType("terms");
-    setTermsOpen(true);
-  };
-  
-  const openPrivacy = () => {
-    setPolicyType("privacy");
-    setPrivacyOpen(true);
-  };
-
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Settings</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="rounded-full"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="temperature-unit" className="text-base">Temperature Unit</Label>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                {temperatureUnit === "metric" ? "Celsius (°C)" : "Fahrenheit (°F)"}
-              </p>
-            </div>
-            <Switch
-              id="temperature-unit"
-              checked={temperatureUnit === "imperial"}
-              onCheckedChange={handleUnitChange}
-            />
+    <div className="fixed inset-0 z-50 bg-black flex flex-col items-stretch justify-start min-h-screen">
+      {/* Top bar */}
+      <div className="flex items-center h-16 px-4 border-b border-white/10">
+        <button
+          onClick={onClose}
+          className="mr-3 p-1 rounded-full text-white hover:bg-white/10 transition"
+          aria-label="Back"
+        >
+          <ArrowLeft size={24} />
+        </button>
+        <h2 className="text-xl font-semibold text-white">Settings</h2>
+      </div>
+      <div className="flex-1 overflow-y-auto px-6 py-8">
+        {/* Section list */}
+        <div className="space-y-9">
+          <div>
+            <div className="text-lg text-white mb-1">Home Screen Weather</div>
           </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="default-location" className="text-base">Default Location</Label>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-              This location will be loaded when you open the app
-            </p>
-            <div className="flex gap-2">
-              <Input 
-                id="default-location"
-                value={locationInput}
-                onChange={(e) => setLocationInput(e.target.value)}
-                placeholder="Enter city name..."
-                className="flex-1"
-              />
-              <Button onClick={handleSaveDefaultLocation} size="sm">
-                <Save className="h-4 w-4 mr-1" />
-                Save
-              </Button>
+          <div>
+            <div className="text-lg text-white mb-1">Temperature unit</div>
+            <div className="text-base text-gray-400">
+              {temperatureUnit === "imperial" ? "Fahrenheit (°F)" : "Celsius (°C)"}
             </div>
           </div>
-          
-          <div className="space-y-3 pt-2">
-            <Label className="text-base">Legal Information</Label>
-            <div className="flex flex-col gap-2">
-              <Button variant="outline" className="justify-start" onClick={openTerms}>
-                <FileText className="h-4 w-4 mr-2" />
-                Terms of Service
-              </Button>
-              <Button variant="outline" className="justify-start" onClick={openPrivacy}>
-                <Shield className="h-4 w-4 mr-2" />
-                Privacy Policy
-              </Button>
-            </div>
+          <div>
+            <div className="text-lg text-white mb-1">Hourly forecast interval</div>
+            <div className="text-base text-gray-400">1-hour interval</div>
           </div>
-
-          <div className="pt-4 border-t dark:border-gray-700">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              All settings are automatically saved and will persist across sessions.
-              Weather data is provided by OpenWeatherMap.
-            </p>
+          <div>
+            <div className="text-lg text-white mb-1">Multi-day forecast format</div>
+            <div className="text-base text-gray-400">List</div>
+          </div>
+          <div>
+            <div className="text-lg text-white mb-1">Version</div>
+            <div className="text-base text-gray-400">{APP_VERSION}</div>
+          </div>
+          <div>
+            <button
+              className="text-lg text-white text-left w-full"
+              onClick={() => {
+                setPolicyType("terms");
+                setTermsOpen(true);
+              }}
+            >
+              Open-Source Software Statement
+            </button>
+          </div>
+          <div>
+            <button
+              className="text-lg text-white text-left w-full"
+              onClick={() => {
+                setPolicyType("terms");
+                setTermsOpen(true);
+              }}
+            >
+              User Agreement
+            </button>
+          </div>
+          <div>
+            <button
+              className="text-lg text-white text-left w-full"
+              onClick={() => {
+                setPolicyType("privacy");
+                setPrivacyOpen(true);
+              }}
+            >
+              Privacy
+            </button>
           </div>
         </div>
       </div>
-      
-      <TermsAndPolicy 
+      <TermsAndPolicy
         isOpen={termsOpen || privacyOpen}
         onClose={() => {
           setTermsOpen(false);
@@ -129,3 +106,4 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
 };
 
 export default Settings;
+
