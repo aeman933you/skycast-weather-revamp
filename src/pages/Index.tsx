@@ -1,6 +1,7 @@
+
 import React, { useState } from "react";
 import { WeatherProvider } from "@/context/WeatherContext";
-import { ThemeProvider } from "@/context/ThemeContext";
+import { useTheme } from "@/context/ThemeContext";
 import TopBar from "@/components/TopBar";
 import Settings from "@/components/Settings";
 import WeatherDashboard from "@/components/WeatherDashboard";
@@ -9,33 +10,6 @@ import { FileText, Shield, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CalculatorApp from "@/components/Calculator";
 
-const WeatherDashboard: React.FC = () => {
-  const { currentWeather, forecastData, isLoading } = useWeather();
-
-  return (
-    <div className="flex flex-col gap-4">
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-          {currentWeather ? (
-            <WeatherCard data={currentWeather} />
-          ) : (
-            <EmptyState />
-          )}
-          
-          {forecastData && (
-            <>
-              <HourlyForecast data={forecastData} />
-              <ForecastCard data={forecastData} />
-            </>
-          )}
-        </>
-      )}
-    </div>
-  );
-};
-
 const Index: React.FC = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
@@ -43,6 +17,7 @@ const Index: React.FC = () => {
   const [policyType, setPolicyType] = useState<"terms" | "privacy">("terms");
   const [showCalculator, setShowCalculator] = useState(false);
   const [secretClickCount, setSecretClickCount] = useState(0);
+  const { theme } = useTheme();
 
   const openTerms = () => {
     setPolicyType("terms");
@@ -63,7 +38,7 @@ const Index: React.FC = () => {
   };
 
   return (
-    <ThemeProvider>
+    <>
       {showCalculator ? (
         <div className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col">
           <div className="flex justify-between items-center mb-6">
@@ -129,7 +104,7 @@ const Index: React.FC = () => {
           </div>
         </WeatherProvider>
       )}
-    </ThemeProvider>
+    </>
   );
 };
 
