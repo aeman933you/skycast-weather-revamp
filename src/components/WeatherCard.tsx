@@ -10,6 +10,7 @@ import {
   capitalizeFirstLetter
 } from "@/lib/utils";
 import { useWeather } from "@/context/WeatherContext";
+import { CloudRain } from "lucide-react";
 
 interface WeatherCardProps {
   data: CurrentWeatherData;
@@ -34,9 +35,10 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ data }) => {
         dark:from-gray-700 dark:to-gray-900
         shadow-xl animate-fade-in h-[360px] sm:h-[420px] mb-6
       "
-      // REMOVE backgroundImage style entirely to make the image disappear!
     >
       <div className="relative w-full h-full flex flex-col justify-start items-center pt-10 pb-6 backdrop-blur-[2px] bg-white/40 dark:bg-black/30">
+        {/* Cloud icon at the top */}
+        <CloudRain className="h-16 w-16 text-sky-400 mb-1 animate-float" />
         {/* City, date, and weather icon */}
         <div className="flex flex-col items-center z-10">
           <div className="text-3xl font-bold tracking-wide text-gray-800 dark:text-white drop-shadow-sm mb-1">

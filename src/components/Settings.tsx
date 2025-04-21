@@ -1,9 +1,15 @@
-
 import React, { useState } from "react";
 import { useWeather } from "@/context/WeatherContext";
 import TermsAndPolicy from "./TermsAndPolicy";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue
+} from "@/components/ui/select";
 
 // Version can be hardcoded or imported from package.json if needed
 const APP_VERSION = "V6.4.0.7";
@@ -18,6 +24,9 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
   const [termsOpen, setTermsOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [policyType, setPolicyType] = useState<"terms" | "privacy">("terms");
+
+  // Local language option for settings
+  const [language, setLanguage] = useState("en");
 
   if (!isOpen) return null;
 
@@ -45,6 +54,19 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
             <div className="text-base text-gray-400">
               {temperatureUnit === "imperial" ? "Fahrenheit (°F)" : "Celsius (°C)"}
             </div>
+          </div>
+          {/* ----- Default Language selector ----- */}
+          <div>
+            <div className="text-lg text-white mb-1">Default Language</div>
+            <Select value={language} onValueChange={setLanguage}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Select language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">English</SelectItem>
+                {/* Other language options can be added later */}
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <div className="text-lg text-white mb-1">Hourly forecast interval</div>
@@ -106,4 +128,3 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
 };
 
 export default Settings;
-
