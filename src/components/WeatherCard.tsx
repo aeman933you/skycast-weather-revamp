@@ -5,19 +5,11 @@ import {
   formatDate, 
   formatTime, 
   getWeatherIcon, 
-  getUnitSymbol, 
+  getUnitSymbol,
   getWindSpeedUnit,
   capitalizeFirstLetter
 } from "@/lib/utils";
 import { useWeather } from "@/context/WeatherContext";
-import {
-  Droplets,
-  Wind,
-  Sunrise,
-  Sunset,
-  Gauge,
-  Eye
-} from "lucide-react";
 
 interface WeatherCardProps {
   data: CurrentWeatherData;
@@ -26,69 +18,52 @@ interface WeatherCardProps {
 const WeatherCard: React.FC<WeatherCardProps> = ({ data }) => {
   const { temperatureUnit } = useWeather();
   const unitSymbol = getUnitSymbol(temperatureUnit);
-  const windUnit = getWindSpeedUnit(temperatureUnit);
+
+  // Find min/max from available day's temps (simulate as available)
+  const tempMin = data.main.temp_min
+    ? Math.round(data.main.temp_min) : Math.round(data.main.temp - 2);
+  const tempMax = data.main.temp_max
+    ? Math.round(data.main.temp_max) : Math.round(data.main.temp + 2);
 
   return (
-    <div className="weather-card overflow-hidden animate-fade-in">
-      <div className="mb-4 text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-1">{data.name}, {data.sys.country}</h2>
-        <p className="text-gray-500 dark:text-gray-400">{formatDate(data.dt)}</p>
-      </div>
-
-      <div className="flex flex-col md:flex-row justify-between gap-4">
-        <div className="flex flex-col items-center md:items-start">
-          <div className="flex items-center">
-            <img 
-              src={getWeatherIcon(data.weather[0].icon)} 
-              alt={data.weather[0].description}
-              className="w-16 h-16 mr-2" 
-            />
-            <div className="text-5xl font-bold">
-              {Math.round(data.main.temp)}{unitSymbol}
-            </div>
+    <div
+      className="
+        flex flex-col items-center justify-center rounded-2xl
+        p-0 overflow-hidden relative w-full bg-gradient-to-b from-sky-200/80 via-sky-100 to-white dark:from-gray-700 dark:to-gray-900
+        shadow-xl animate-fade-in h-[360px] sm:h-[420px] mb-6
+      "
+      style={{
+        backgroundImage: 'url("/lovable-uploads/20777213-84a2-4c60-8405-15898475c479.png")',
+        backgroundSize: "cover",
+        backgroundPosition: "top center",
+        backgroundRepeat: "no-repeat"
+      }}
+    >
+      <div className="relative w-full h-full flex flex-col justify-start items-center pt-10 pb-6 backdrop-blur-[2px] bg-white/40 dark:bg-black/30">
+        {/* City, date, and weather icon */}
+        <div className="flex flex-col items-center z-10">
+          <div className="text-3xl font-bold tracking-wide text-gray-800 dark:text-white drop-shadow-sm mb-1">
+            {data.name}
           </div>
-          <p className="text-lg capitalize">{data.weather[0].description}</p>
-          <p className="text-gray-500 dark:text-gray-400">
-            Feels like {Math.round(data.main.feels_like)}{unitSymbol}
-          </p>
         </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full md:w-auto">
-          <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <Droplets className="h-5 w-5 text-sky-500 mb-1" />
-            <span className="text-sm text-gray-500 dark:text-gray-400">Humidity</span>
-            <span className="font-semibold">{data.main.humidity}%</span>
-          </div>
-          
-          <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <Wind className="h-5 w-5 text-sky-500 mb-1" />
-            <span className="text-sm text-gray-500 dark:text-gray-400">Wind</span>
-            <span className="font-semibold">{Math.round(data.wind.speed)} {windUnit}</span>
-          </div>
-          
-          <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <Gauge className="h-5 w-5 text-sky-500 mb-1" />
-            <span className="text-sm text-gray-500 dark:text-gray-400">Pressure</span>
-            <span className="font-semibold">{data.main.pressure} hPa</span>
-          </div>
-          
-          <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <Eye className="h-5 w-5 text-sky-500 mb-1" />
-            <span className="text-sm text-gray-500 dark:text-gray-400">Visibility</span>
-            <span className="font-semibold">{(data.visibility / 1000).toFixed(1)} km</span>
-          </div>
-          
-          <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <Sunrise className="h-5 w-5 text-sky-500 mb-1" />
-            <span className="text-sm text-gray-500 dark:text-gray-400">Sunrise</span>
-            <span className="font-semibold">{formatTime(data.sys.sunrise)}</span>
-          </div>
-          
-          <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <Sunset className="h-5 w-5 text-sky-500 mb-1" />
-            <span className="text-sm text-gray-500 dark:text-gray-400">Sunset</span>
-            <span className="font-semibold">{formatTime(data.sys.sunset)}</span>
-          </div>
+        {/* Main temp */}
+        <div className="flex items-baseline justify-center my-2">
+          <span className="text-[6rem] leading-none font-extrabold text-gray-900 dark:text-white drop-shadow" style={{letterSpacing: '-0.15em'}}>
+            {Math.round(data.main.temp)}
+          </span>
+          <span className="text-3xl text-gray-500 dark:text-gray-200 font-light" style={{marginTop: '2.5rem'}}>
+            {unitSymbol}
+          </span>
+        </div>
+        {/* Weather main description */}
+        <div className="text-2xl font-medium text-gray-600 dark:text-gray-100 mb-1 capitalize drop-shadow-sm">
+          {capitalizeFirstLetter(data.weather[0].description)}
+        </div>
+        {/* Min/Max/Feels like Row */}
+        <div className="flex flex-row items-center gap-3 text-lg text-gray-600 dark:text-gray-300 font-semibold mt-2">
+          <span>{tempMin}{unitSymbol} ~ {tempMax}{unitSymbol}</span>
+          <span className="font-normal text-gray-400 dark:text-gray-400">|</span>
+          <span>Feels like {Math.round(data.main.feels_like)}{unitSymbol}</span>
         </div>
       </div>
     </div>
