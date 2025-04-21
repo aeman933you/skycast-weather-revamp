@@ -1,5 +1,6 @@
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { getLocalStorage, setLocalStorage } from "@/lib/utils";
 
 type Theme = "light" | "dark";
